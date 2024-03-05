@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+
+  sleek-airflow:
+    image: sleek-airflow:latest
+    volumes:
+      - ./airflow:/opt/airflow
+    ports:
+      - "8008:8080"
+    command: airflow standalone
+    networks:
+      - my-network
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_HOST=mongo  # Use the hostname of the MongoDB container
+
+  mongo:
+    image: mongo
+    volumes:
+      - data-volume:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge
+
+volumes:
+  data-volume:
